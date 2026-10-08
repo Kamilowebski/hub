@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { page: '#f4f7f9' } } } };
+  </script>
+  <style>
+    /* Widoczny fokus dla klawiatury */
+    a:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+  </style>
+</head>
+<body class="bg-page text-slate-800 antialiased">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <header class="flex items-center justify-between gap-4">
+      <h1 class="text-2xl font-semibold">Hub</h1>
+      <div id="hub-apps"></div>
+    </header>
+
+    <!-- Kafelki stron -->
+    <main>
+      <div id="apps" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="empty" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-8 text-center text-sm text-slate-500">
+        Brak stron. Dodaj pierwszą w pliku apps.js.
+      </div>
+    </main>
+  </div>
+
+  <!-- Wspólna lista stron i przycisk kwadracików -->
+  <script src="apps.js"></script>
+  <script>
+    // Renderowanie kafelków z listy window.HUB_APPS
+    const apps = window.HUB_APPS || [];
+    const box = document.getElementById('apps');
+
+    if (!apps.length) document.getElementById('empty').classList.remove('hidden');
+
+    apps.forEach((app) => {
+      const a = document.createElement('a');
+      a.href = app.url;
+      a.className = 'group flex items-start gap-4 bg-white border border-slate-200 rounded-xl shadow-sm p-5 hover:border-blue-600';
+
+      const ico = document.createElement('div');
+      ico.className = 'flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white';
+      // Ikony pochodzą ze stałej listy w apps.js
+      ico.innerHTML = '<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + app.icon + '</svg>';
+
+      const txt = document.createElement('div');
+      const title = document.createElement('h2');
+      title.className = 'text-base font-semibold';
+      title.textContent = app.name;
+      const desc = document.createElement('p');
+      desc.className = 'mt-1 text-sm text-slate-500';
+      desc.textContent = app.desc || '';
+      txt.appendChild(title);
+      txt.appendChild(desc);
+
+      a.appendChild(ico);
+      a.appendChild(txt);
+      box.appendChild(a);
+    });
+  </script>
+</body>
+</html>
